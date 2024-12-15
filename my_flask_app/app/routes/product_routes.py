@@ -67,7 +67,7 @@ def get_products():
 
 
             #將查詢結果轉換為json
-            products = Product.query.filter_by(user_id=user_id).all()
+            products = Product.query.filter_by(user_id=user_id,is_deleted=False).all()
             products_list=[]
             #遍歷每個商品並加入倒product_list
             for product in products:
@@ -100,7 +100,7 @@ def proudcts_in_Client():
             return jsonify({"message": "User ID missing"}), 400
 
         # 將查詢結果轉換為json
-        products = Product.query.filter_by(user_id=user_id).all()
+        products = Product.query.filter_by(user_id=user_id,is_deleted=False).all()
         products_list = []
         # 遍歷每個商品並加入倒product_list
         for product in products:
@@ -211,7 +211,8 @@ def delete_prodcut(productId):
         product =Product.query.get(productId)
         if not product:
             return jsonify({"message":"Product not found "}),404
-        db.session.delete(product)
+        # 設置軟刪除標記
+        product.is_deleted = True
         db.session.commit()
 
         return jsonify({"message":"Product deleted successful!"}),200

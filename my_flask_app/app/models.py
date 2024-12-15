@@ -51,6 +51,7 @@ class Product(db.Model):
     cost = db.Column(db.Float, nullable=True)
     quantity = db.Column(db.Integer, nullable=True)
     image = db.Column(db.String(200))
+    is_deleted = db.Column(db.Boolean, default=False)  # 軟刪除標記
 
     order_products = relationship('OrderProduct', back_populates='product')
 
@@ -80,7 +81,7 @@ class Order(db.Model):
 class OrderProduct(db.Model):
     __tablename__ = 'orderproduct'
     order_id = db.Column(db.Integer, db.ForeignKey('orders.order_id'), primary_key=True)
-    product_id = db.Column(db.Integer, db.ForeignKey('products.product_id'), primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.product_id'),primary_key=True)
     quantity = db.Column(db.Integer, nullable=False)
     # 加入Order and Product的雙向關係
     order = relationship('Order', back_populates='order_products')
